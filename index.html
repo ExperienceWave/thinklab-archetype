@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThinkLab+ | AI Archetype Diagnostic</title>
+<meta name="description" content="This is not a test of your AI skills. Discover how you naturally think and behave when using AI.">
+<meta property="og:title" content="ThinkLab+ | AI Archetype Diagnostic">
+<meta property="og:description" content="10 questions. No right or wrong answers. Find out your AI archetype.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.10);
+    --border-mid: rgba(0,0,0,0.18);
+    --border-strong: rgba(0,0,0,0.55);
+    --text-primary: #1A1A18;
+    --text-secondary: #6B6B67;
+    --text-tertiary: #9E9E99;
+    --accent: #1A1A18;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141412;
+      --surface: #1E1E1C;
+      --border: rgba(255,255,255,0.09);
+      --border-mid: rgba(255,255,255,0.18);
+      --border-strong: rgba(255,255,255,0.60);
+      --text-primary: #F0EFE8;
+      --text-secondary: #9E9E99;
+      --text-tertiary: #5E5E5A;
+      --accent: #F0EFE8;
+    }
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 640px;
+    min-height: 100vh;
+    padding: 2.5rem 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+  }
+
+  .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    text-decoration: none;
+  }
+
+  .brand em {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-bar {
+    width: 120px;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .step-label {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    min-width: 40px;
+    text-align: right;
+  }
+
+  /* Screens */
+  .screen { display: none; flex: 1; flex-direction: column; animation: fadeUp 0.35s ease forwards; }
+  .screen.active { display: flex; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Intro */
+  .intro-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 38px);
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    max-width: 480px;
+  }
+
+  .intro-title em {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  .intro-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    max-width: 420px;
+    margin-bottom: 2.75rem;
+  }
+
+  .intro-note {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 1rem;
+  }
+
+  /* Question */
+  .q-section-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  .q-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(20px, 3.5vw, 26px);
+    line-height: 1.35;
+    color: var(--text-primary);
+    margin-bottom: 2.25rem;
+    max-width: 520px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 9px; }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: var(--surface);
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    text-align: left;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .option:hover {
+    border-color: var(--border-mid);
+    background: var(--bg);
+    transform: translateX(2px);
+  }
+
+  .option.selected {
+    border-color: var(--border-strong);
+    background: var(--bg);
+  }
+
+  .option:active { transform: scale(0.99); }
+
+  .opt-letter {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    min-width: 14px;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    transition: color 0.15s;
+  }
+
+  .option.selected .opt-letter { color: var(--text-primary); }
+
+  .opt-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.55;
+    font-weight: 400;
+  }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px 24px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s, transform 0.1s;
+    border: 0.5px solid var(--border-mid);
+    background: transparent;
+    color: var(--text-primary);
+    letter-spacing: 0.1px;
+  }
+
+  .btn:hover { background: var(--border); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.28; cursor: default; pointer-events: none; }
+
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  .btn-primary:hover { opacity: 0.82; background: var(--text-primary); }
+
+  /* Result */
+  .result-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  .result-archetype {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(34px, 6vw, 48px);
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 1.75rem;
+  }
+
+  .result-archetype em {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  .result-divider {
+    height: 0.5px;
+    background: var(--border);
+    margin-bottom: 1.75rem;
+    width: 48px;
+  }
+
+  .result-insight {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    max-width: 500px;
+    margin-bottom: 2rem;
+  }
+
+  .result-section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 0.875rem;
+  }
+
+  .gaps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2.25rem;
+  }
+
+  .gap-tag {
+    font-size: 12px;
+    padding: 6px 14px;
+    border: 0.5px solid var(--border-mid);
+    border-radius: 20px;
+    color: var(--text-secondary);
+  }
+
+  .dim-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 2.25rem; }
+
+  .dim-row { display: flex; align-items: center; gap: 14px; }
+
+  .dim-label { font-size: 12px; color: var(--text-secondary); min-width: 110px; }
+
+  .dim-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .dim-fill {
+    height: 100%;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  .result-hook {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 440px;
+    padding: 1.25rem 0;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 0.5rem;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .page { padding: 1.75rem 1.25rem 2.5rem; }
+    .header { margin-bottom: 2.5rem; }
+    .progress-bar { width: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <a class="brand" href="#">ThinkLab<em>+</em></a>
+    <div class="header-right">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="step-label" id="stepLabel"></div>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <div class="screen active" id="introScreen">
+    <div class="intro-eyebrow">AI Archetype Diagnostic</div>
+    <h1 class="intro-title">How do you <em>really</em> behave with AI?</h1>
+    <p class="intro-desc">This is not a test of your AI skills. 10 questions. No right or wrong answers. What you get at the end reveals how you naturally think and act when using AI — and where your real growth opportunity lies.</p>
+    <div>
+      <button class="btn btn-primary" onclick="startSurvey()">Begin &rarr;</button>
+      <p class="intro-note">Takes about 3 minutes &middot; No sign-up required</p>
+    </div>
+  </div>
+
+  <!-- Question -->
+  <div class="screen" id="questionScreen">
+    <div class="q-section-tag" id="sectionTag"></div>
+    <h2 class="q-text" id="questionText"></h2>
+    <div class="options" id="optionsContainer"></div>
+    <div class="nav">
+      <button class="btn" id="backBtn" onclick="goBack()">Back</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="goNext()" disabled>Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="screen" id="resultScreen">
+    <div class="result-eyebrow">Your AI Archetype</div>
+    <div class="result-archetype" id="resultTitle"></div>
+    <div class="result-divider"></div>
+    <p class="result-insight" id="resultInsight"></p>
+    <div class="result-section-label">Where to develop</div>
+    <div class="gaps" id="resultGaps"></div>
+    <div class="result-section-label">Capability profile</div>
+    <div class="dim-bars" id="dimBars"></div>
+    <p class="result-hook" id="resultHook"></p>
+    <div class="nav">
+      <button class="btn" onclick="restartSurvey()">Retake</button>
+      <a class="btn btn-primary" href="mailto:hello@thinklabplus.com?subject=ThinkLab%2B%20Enquiry" id="ctaBtn">Learn about ThinkLab+ &rarr;</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>&copy; 2026 ThinkLab+</span>
+    <span>Developing how students think, learn &amp; act</span>
+  </footer>
+
+</div>
+
+<script>
+const questions = [
+  {
+    section: "How you approach AI",
+    text: "When you start using AI, what do you usually do?",
+    options: [
+      { letter: "A", text: "Ask something simple and see what comes out", type: "S" },
+      { letter: "B", text: "Add some context and refine as you go", type: "Bu" },
+      { letter: "C", text: "Think through exactly what I want before asking", type: "T" },
+      { letter: "D", text: "Try different angles to explore possibilities", type: "P" },
+      { letter: "E", text: "Jump in quickly and adjust later", type: "E" }
+    ]
+  },
+  {
+    section: "How you approach AI",
+    text: "When the AI response is not useful, what is your instinct?",
+    options: [
+      { letter: "A", text: "Accept a 'good enough' result and move on", type: "S" },
+      { letter: "B", text: "Add more details and keep refining the prompt", type: "Bu" },
+      { letter: "C", text: "Break the task into smaller parts and rethink", type: "T" },
+      { letter: "D", text: "Reframe how I communicate the request", type: "P" },
+      { letter: "E", text: "Try a completely different approach or tool", type: "E" }
+    ]
+  },
+  {
+    section: "How you run tasks",
+    text: "When working with AI on a task, you usually:",
+    options: [
+      { letter: "A", text: "Stay in one thread and push through quickly", type: "S" },
+      { letter: "B", text: "Open a few threads to try different ideas", type: "Bu" },
+      { letter: "C", text: "Use different tools to compare and validate", type: "T" },
+      { letter: "D", text: "Plan the approach before using AI", type: "P" },
+      { letter: "E", text: "Start quickly and figure it out as I go", type: "E" }
+    ]
+  },
+  {
+    section: "How you run tasks",
+    text: "When using AI on a project, your main focus is:",
+    options: [
+      { letter: "A", text: "Getting a result out as fast as possible", type: "S" },
+      { letter: "B", text: "Building something solid step by step", type: "Bu" },
+      { letter: "C", text: "Making sure it is accurate and well-reasoned", type: "T" },
+      { letter: "D", text: "Making it clear, impactful, and well-presented", type: "P" },
+      { letter: "E", text: "Exploring what is possible before deciding", type: "E" }
+    ]
+  },
+  {
+    section: "How you decide",
+    text: "When AI gives you an answer, you usually:",
+    options: [
+      { letter: "A", text: "Use it as is — fast and practical", type: "S" },
+      { letter: "B", text: "Adjust it slightly to fit my needs", type: "Bu" },
+      { letter: "C", text: "Analyze, fact-check, and refine it carefully", type: "T" },
+      { letter: "D", text: "Reframe it for how it will land on my audience", type: "P" },
+      { letter: "E", text: "Treat it as a starting point to experiment from", type: "E" }
+    ]
+  },
+  {
+    section: "How you decide",
+    text: "When facing a complex task with AI, you tend to:",
+    options: [
+      { letter: "A", text: "Let AI suggest the direction and follow it", type: "S" },
+      { letter: "B", text: "Work with AI step by step toward the goal", type: "Bu" },
+      { letter: "C", text: "Structure the problem myself before prompting", type: "T" },
+      { letter: "D", text: "Think about how to communicate the outcome first", type: "P" },
+      { letter: "E", text: "Start fast, see what emerges, then refine", type: "E" }
+    ]
+  },
+  {
+    section: "How you explore",
+    text: "When you hear about a new AI tool, you usually:",
+    options: [
+      { letter: "A", text: "Try it immediately without much research", type: "S" },
+      { letter: "B", text: "Try it when I have time and a real use case", type: "Bu" },
+      { letter: "C", text: "Research it thoroughly before trying", type: "T" },
+      { letter: "D", text: "Look for how others are using it creatively", type: "P" },
+      { letter: "E", text: "Dive deep to understand what it can really do", type: "E" }
+    ]
+  },
+  {
+    section: "How you explore",
+    text: "When using AI, you most naturally tend to:",
+    options: [
+      { letter: "A", text: "Use it for quick help on immediate tasks", type: "S" },
+      { letter: "B", text: "Build structured outputs and deliverables", type: "Bu" },
+      { letter: "C", text: "Validate, analyze, and test ideas", type: "T" },
+      { letter: "D", text: "Express, present, or communicate ideas", type: "P" },
+      { letter: "E", text: "Experiment freely with no fixed goal", type: "E" }
+    ]
+  },
+  {
+    section: "How you sustain",
+    text: "When AI does not give what you want after several tries:",
+    options: [
+      { letter: "A", text: "Settle for something close enough", type: "S" },
+      { letter: "B", text: "Keep refining the prompt step by step", type: "Bu" },
+      { letter: "C", text: "Rework the entire approach from scratch", type: "T" },
+      { letter: "D", text: "Adjust how I frame or communicate the request", type: "P" },
+      { letter: "E", text: "Lose interest and switch to something else", type: "E" }
+    ]
+  },
+  {
+    section: "How you sustain",
+    text: "When working on something over time with AI:",
+    options: [
+      { letter: "A", text: "I complete it efficiently but do not go deep", type: "S" },
+      { letter: "B", text: "I improve it steadily until it is done properly", type: "Bu" },
+      { letter: "C", text: "I refine it deeply, sometimes for too long", type: "T" },
+      { letter: "D", text: "I polish how it is delivered and received", type: "P" },
+      { letter: "E", text: "I start strong but may not always finish", type: "E" }
+    ]
+  }
+];
+
+const archetypes = {
+  S: {
+    name: "The Starter",
+    insight: "You move fast and take action quickly — that energy is real and valuable. But you may rely on AI outputs without questioning them deeply, and consistency under sustained pressure is where you lose ground. Speed without judgment can leave gaps.",
+    gaps: ["Independent validation", "Sustained focus", "Structured thinking"],
+    dims: { Challenge: 55, Learning: 40, Execution: 50, Resilience: 35, Communication: 60 },
+    hook: "ThinkLab+ develops the habits of persistence and critical judgment through real challenges — not by slowing you down, but by making your speed more purposeful."
+  },
+  Bu: {
+    name: "The Builder",
+    insight: "You are practical, reliable, and outcome-driven. You know how to get things done with AI and you produce consistent results. The risk is that you may rely too quickly on AI outputs without probing deeper — execution without deeper validation can create blind spots.",
+    gaps: ["Critical validation", "Independent exploration", "Challenging assumptions"],
+    dims: { Challenge: 60, Learning: 65, Execution: 85, Resilience: 75, Communication: 60 },
+    hook: "ThinkLab+ pushes Builders to question their outputs, not just produce them — developing the judgment layer that turns good execution into genuine capability."
+  },
+  T: {
+    name: "The Thinker",
+    insight: "You analyze carefully, validate thoroughly, and rarely accept an answer at face value. This depth is your greatest strength. The challenge is decisiveness — deep processing can slow action, and overthinking can prevent you from shipping and communicating clearly.",
+    gaps: ["Action under uncertainty", "Communication clarity", "Speed to execution"],
+    dims: { Challenge: 55, Learning: 90, Execution: 60, Resilience: 70, Communication: 55 },
+    hook: "ThinkLab+ gives Thinkers structured environments to build, present, and deliver — so your depth translates into observable results, not just internal analysis."
+  },
+  P: {
+    name: "The Performer",
+    insight: "You are confident, expressive, and highly effective at shaping how ideas land. You naturally think about your audience and communicate with clarity. The gap is in the work behind the presentation — depth of thinking and independent learning may not always match your expressive strength.",
+    gaps: ["Independent learning", "Depth of analysis", "Resilience under difficulty"],
+    dims: { Challenge: 50, Learning: 55, Execution: 65, Resilience: 55, Communication: 90 },
+    hook: "ThinkLab+ challenges Performers to build the substance behind their expression — developing the thinking and execution that makes what you communicate truly your own."
+  },
+  E: {
+    name: "The Explorer",
+    insight: "You are genuinely curious, willing to try anything, and naturally drawn to what is new. Your range of exploration is a real asset. The challenge is follow-through — curiosity without completion limits how much of that exploration translates into actual capability.",
+    gaps: ["Completion and execution", "Structured thinking", "Sustained resilience"],
+    dims: { Challenge: 80, Learning: 85, Execution: 40, Resilience: 45, Communication: 60 },
+    hook: "ThinkLab+ channels Explorer energy into structured delivery — giving you the real challenges, checkpoints, and completion experience your learning needs to become lasting capability."
+  }
+};
+
+let current = 0;
+let answers = [];
+let selectedOption = null;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.animation = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = '';
+  el.classList.add('active');
+}
+
+function startSurvey() {
+  current = 0;
+  answers = [];
+  document.getElementById('progressBar').style.display = 'block';
+  showQuestion();
+  showScreen('questionScreen');
+}
+
+function showQuestion() {
+  const q = questions[current];
+  selectedOption = (answers[current] !== undefined) ? answers[current] : null;
+
+  document.getElementById('sectionTag').textContent = q.section;
+  document.getElementById('questionText').textContent = q.text;
+  document.getElementById('stepLabel').textContent = (current + 1) + ' / ' + questions.length;
+  document.getElementById('progressFill').style.width = ((current + 1) / questions.length * 100) + '%';
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (selectedOption === i ? ' selected' : '');
+    btn.innerHTML = '<span class="opt-letter">' + opt.letter + '</span><span class="opt-text">' + opt.text + '</span>';
+    btn.addEventListener('click', () => selectOption(i));
+    container.appendChild(btn);
+  });
+
+  document.getElementById('backBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = selectedOption === null;
+  nextBtn.textContent = current === questions.length - 1 ? 'See my archetype \u2192' : 'Next \u2192';
+}
+
+function selectOption(i) {
+  selectedOption = i;
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function goNext() {
+  if (selectedOption === null) return;
+  answers[current] = selectedOption;
+  if (current < questions.length - 1) {
+    current++;
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if (current > 0) {
+    if (selectedOption !== null) answers[current] = selectedOption;
+    current--;
+    showQuestion();
+  }
+}
+
+function showResult() {
+  const counts = { S: 0, Bu: 0, T: 0, P: 0, E: 0 };
+  answers.forEach((ansIdx, qIdx) => {
+    if (ansIdx !== undefined && ansIdx !== null) {
+      counts[questions[qIdx].options[ansIdx].type]++;
+    }
+  });
+
+  const winner = Object.keys(counts).reduce((a, b) => counts[a] >= counts[b] ? a : b);
+  const arch = archetypes[winner];
+
+  const nameParts = arch.name.split(' ');
+  document.getElementById('resultTitle').innerHTML = nameParts[0] + ' <em>' + nameParts.slice(1).join(' ') + '</em>';
+  document.getElementById('resultInsight').textContent = arch.insight;
+
+  document.getElementById('resultGaps').innerHTML = arch.gaps.map(g =>
+    '<span class="gap-tag">' + g + '</span>'
+  ).join('');
+
+  document.getElementById('dimBars').innerHTML = Object.entries(arch.dims).map(([dim, val]) =>
+    '<div class="dim-row"><span class="dim-label">' + dim + '</span><div class="dim-track"><div class="dim-fill" style="width:0%" data-val="' + val + '"></div></div></div>'
+  ).join('');
+
+  document.getElementById('resultHook').textContent = arch.hook;
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('stepLabel').textContent = '';
+
+  showScreen('resultScreen');
+
+  setTimeout(() => {
+    document.querySelectorAll('.dim-fill').forEach(el => {
+      el.style.width = el.getAttribute('data-val') + '%';
+    });
+  }, 150);
+}
+
+function restartSurvey() {
+  current = 0;
+  answers = [];
+  selectedOption = null;
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('stepLabel').textContent = '';
+  showScreen('introScreen');
+}
+</script>
+</body>
+</html>
